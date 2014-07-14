@@ -1,0 +1,16 @@
+delimiters "%","%"
+
+instance(packageName, imports, className, isBean) ::= "
+%package(packageName)%
+imports:import()
+%clazz(className,isBean)%"
+
+package(name) ::= "package %name%;"
+
+import(i) ::= "import %i%;"
+
+clazz(name,isBean) ::= "public class AutoProperty_%name% extends %name% <if(isBean)>implements AutoProperty_Bean_%name%<endif> {
+
+}"
+
+requireNonNullImport() ::= "import static java.util.Objects.requireNonNull;"

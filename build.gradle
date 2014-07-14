@@ -1,20 +1,44 @@
 apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'eclipse'
-apply plugin: 'checkstyle'
+apply plugin: 'idea'
 
 repositories {
 	mavenCentral()
-	/**
-	 * This would be the following if you use nexus/artifactory internally
-	 * mavenRepo urls: 'http://your/internal/resolver'
-	 */
+	maven {
+		url 'http://aphillips.googlecode.com/svn/maven-repository/snapshots'
+	}
 }
 
+
+//TODO(bugabinga): configure equivalent for IDEA
+eclipse {
+  classpath {
+  	downloadJavadoc = true
+  	downloadSources = true
+
+	//exclude the case test package to prevent cluttering the IDE with false Error messages
+    file {
+      withXml {
+      def resourceEntry = it.asNode().find { it.attributes().kind=='src' && it.attributes().path=='src/test/resources' }
+      resourceEntry.attributes().excluding = 'net/bugabinga/annotation/bean/model/'
+        //<classpathentry excluding="net/bugabinga/annotation/bean/model/" kind="src" path="src/test/resources"/>
+        //foreach( entry in it.asNode()) {
+        //	if(entry.attribute('kind')=='src' && entry.attribute('path')=='src/test/resources') {
+        //		entry.attributes().excluding = 'net/bugabinga/annotation/bean/model/'
+        //	}
+        //}
+      }
+     }
+    }
+   }
+
 dependencies {
-	compile 'com.google.guava:guava:17.0'
+	compile 'org.antlr:ST4:4.0.8'
 	testCompile 'junit:junit:4.11'
 	testCompile 'org.mockito:mockito-all:1.9.5'
+	testCompile 'com.qrmedia.commons:commons-test-support:1.0-SNAPSHOT'
+	testCompile 'com.google.code.findbugs:jsr305:3.0.0'
 }
 
 task sourcesJar(type: Jar, dependsOn:classes) {
@@ -25,6 +49,11 @@ task sourcesJar(type: Jar, dependsOn:classes) {
 task javadocJar(type: Jar, dependsOn:javadoc) {
 	classifier = 'javadoc'
 	from javadoc.destinationDir
+}
+
+task stDebug(type:JavaExec) {
+   main = "net.bugabinga.annotation.bean.template.STDebugGUI"
+   classpath = sourceSets.main.runtimeClasspath
 }
 
 artifacts {
