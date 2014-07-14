@@ -5,9 +5,6 @@ apply plugin: 'idea'
 
 repositories {
 	mavenCentral()
-	maven {
-		url 'http://aphillips.googlecode.com/svn/maven-repository/snapshots'
-	}
 }
 
 
@@ -37,7 +34,6 @@ dependencies {
 	compile 'org.antlr:ST4:4.0.8'
 	testCompile 'junit:junit:4.11'
 	testCompile 'org.mockito:mockito-all:1.9.5'
-	testCompile 'com.qrmedia.commons:commons-test-support:1.0-SNAPSHOT'
 	testCompile 'com.google.code.findbugs:jsr305:3.0.0'
 }
 
@@ -54,6 +50,10 @@ task javadocJar(type: Jar, dependsOn:javadoc) {
 task stDebug(type:JavaExec) {
    main = "net.bugabinga.annotation.bean.template.STDebugGUI"
    classpath = sourceSets.main.runtimeClasspath
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.0'
 }
 
 artifacts {
