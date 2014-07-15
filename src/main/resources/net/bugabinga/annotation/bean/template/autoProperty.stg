@@ -1,16 +1,56 @@
 delimiters "%","%"
 
-instance(packageName, imports, className, isBean) ::= "
-%package(packageName)%
-imports:import()
-%clazz(className,isBean)%"
+auto_property_instance(packageName, imports, className, isBean) ::= <<
+%package_statement(packageName)%
+imports:import_statement()
+%clazz(className,isBean)%>>
 
-package(name) ::= "package %name%;"
+property_parameter(type,name) ::= "final %type% %name%"
 
-import(i) ::= "import %i%;"
+property_definition(name ,type) ::= "this.%name% = new %type%(this,\"%name%\",%name%)"
 
-clazz(name,isBean) ::= "public class AutoProperty_%name% extends %name% <if(isBean)>implements AutoProperty_Bean_%name%<endif> {
+property_parameter(type,name) ::= "final %type% %name%"
 
-}"
+import_statement(name ,isStatic=false) ::= "import %if(isStatic)%static%endif% %name%;"
 
-requireNonNullImport() ::= "import static java.util.Objects.requireNonNull;"
+package_statement(name) ::= "package %name%;"
+
+getter_sig(type, name) ::= "public %type% get%name.capitalize()%()"
+
+getter_interface(type, name, commentText, commentReturn) ::= <<
+
+/**
+* %commentText.replace("\n","\n * ") %
+* @return %commentReturn%
+*/
+%getter_sig(type,name)%;
+>>
+
+getter_impl(type, name) ::= <<
+@Override
+%getter_sig(type, name)% {
+	return %name%.getValue();
+}
+>>
+
+setter_sig(type, name) ::= "public %type% set%name.capitalize()%()"
+
+setter_interface(type, name, commentText, commentParam) ::= <<
+/**
+* %commentText.replace("\n","\n * ")%
+* @param %name% %commentParam%
+*/
+%setter_sig(type, name)%;
+>>
+
+setter_impl(type, name, %valueType%) ::= <<
+@Override
+%setter_sig(type, name)%(final %valueType% %name%) {
+	this.%name%.setValue(%name%)
+}
+>>
+
+clazz(name,isBean) ::= <<
+public class AutoProperty_%name% extends %name% %if(isBean)%implements AutoProperty_Bean_%name% %endif%{
+
+}>>
