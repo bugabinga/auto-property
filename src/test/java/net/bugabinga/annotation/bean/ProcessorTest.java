@@ -22,8 +22,6 @@ import javax.tools.Diagnostic.Kind;
 
 import org.junit.Test;
 
-import com.qrmedia.commons.test.annotation.processing.AbstractAnnotationProcessorTest;
-
 /**
  * @author Oliver Jan Krylow (okrylow@gmail.com)
  *

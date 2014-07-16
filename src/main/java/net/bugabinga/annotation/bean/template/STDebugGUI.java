@@ -27,7 +27,7 @@ import org.stringtemplate.v4.STGroupFile;
 public class STDebugGUI {
 
   /**
-   * @param args
+   * @param args arguments
    */
   public static void main(final String[] args) {
     final STGroup group =

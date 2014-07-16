@@ -1,14 +1,14 @@
 /*
  * This file is part of auto-property.
- * 
+ *
  * auto-property is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * auto-property is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with auto-property. If
  * not, see <http://www.gnu.org/licenses/>.
  */
@@ -36,8 +36,10 @@ import javax.tools.Diagnostic.Kind;
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class Processor extends AbstractProcessor {
   static final String AUTO_PROPERTY_ANNOTATION_NAME = "net.bugabinga.annotation.bean.AutoProperty";
+
   private static final String NON_ABSTRACT_CLASS_WARNING =
       "You have annotated a non-abstract class with @AutoProperty. This will not lead to automatic property generation. Please check {0}.";
+
   private static final String INTERFACE_WARNING =
       "You have annotated an interface with @AutoProperty. This will not lead to automatic property generation. Please check {0}.";
 
