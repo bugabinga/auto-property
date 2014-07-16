@@ -2,14 +2,12 @@ delimiters "%","%"
 
 auto_property_instance(packageName, imports, className, isBean) ::= <<
 %package_statement(packageName)%
-imports:import_statement()
+%imports:import_statement()%
 %clazz(className,isBean)%>>
 
 property_parameter(type,name) ::= "final %type% %name%"
 
 property_definition(name ,type) ::= "this.%name% = new %type%(this,\"%name%\",%name%)"
-
-property_parameter(type,name) ::= "final %type% %name%"
 
 import_statement(name ,isStatic=false) ::= "import %if(isStatic)%static%endif% %name%;"
 
@@ -43,14 +41,26 @@ setter_interface(type, name, commentText, commentParam) ::= <<
 %setter_sig(type, name)%;
 >>
 
-setter_impl(type, name, %valueType%) ::= <<
+setter_impl(type, name) ::= <<
 @Override
-%setter_sig(type, name)%(final %valueType% %name%) {
+%setter_sig(type, name)%(final %type% %name%) {
+	Objects.requireNonNull($);
 	this.%name%.setValue(%name%)
 }
 >>
 
-clazz(name,isBean) ::= <<
-public class AutoProperty_%name% extends %name% %if(isBean)%implements AutoProperty_Bean_%name% %endif%{
-
+clazz(name,isBean, params) ::= <<
+public final class AutoProperty_%name% extends %name% %if(isBean)%implements AutoProperty_Bean_%name% %endif%{
+	AutoProperty_%name%(%params; wrap, anchor, separator=",":property_parameter()% ) {
+		%params:property_definition()%
+	}
 }>>
+
+property_accessor(name, type) ::= <<
+@Override
+public %type% %name%(){
+	return %name%;
+}
+
+<!- TODO how to handle property naming convention -!>
+<!- TODO if destructuring will not work ,figure out alternative -!>
