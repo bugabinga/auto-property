@@ -1,24 +1,39 @@
 delimiters "%","%"
 
-auto_property_instance(packageName, imports, className, isBean) ::= <<
+auto_property_instance(packageName, imports, className, isBean, params) ::= <<
 %package_statement(packageName)%
-%imports:import_statement()%
-%clazz(className,isBean)%>>
 
-property_parameter(type,name) ::= "final %type% %name%"
+%imports:import_statement(); separator="\n"%
 
-property_definition(name ,type) ::= "this.%name% = new %type%(this,\"%name%\",%name%)"
+%clazz(className, isBean, params)%>>
 
-import_statement(name ,isStatic=false) ::= "import %if(isStatic)%static%endif% %name%;"
+import_statement(name, isStatic=false) ::= "import %if(isStatic)%static%endif% %name%;"
 
 package_statement(name) ::= "package %name%;"
 
-getter_sig(type, name) ::= "public %type% get%name.capitalize()%()"
+clazz(name,isBean, params) ::= <<
+public final class AutoProperty_%name% extends %name% {
+	AutoProperty_%name%(%params:property_parameter(); wrap, anchor, separator=","% ) {
+		%params:property_definition(); separator="\n"%
+	}
+}>>
+
+property_parameter(property) ::= "final %property.type% %property.name%"
+
+property_definition(property) ::= "this.%property.name% = new %property.type%(this,\"%property.name%\",%property.name%)"
+
+property_accessor(property) ::= <<
+@Override
+public %property.type% %property.name%(){
+	return %property.name%;
+}>>
+
+getter_sig(type, name) ::= "public %type% get%name%()"
 
 getter_interface(type, name, commentText, commentReturn) ::= <<
 
 /**
-* %commentText.replace("\n","\n * ") %
+* %commentText%
 * @return %commentReturn%
 */
 %getter_sig(type,name)%;
@@ -31,11 +46,11 @@ getter_impl(type, name) ::= <<
 }
 >>
 
-setter_sig(type, name) ::= "public %type% set%name.capitalize()%()"
+setter_sig(type, name) ::= "public %type% set%name%()"
 
 setter_interface(type, name, commentText, commentParam) ::= <<
 /**
-* %commentText.replace("\n","\n * ")%
+* %commentText%
 * @param %name% %commentParam%
 */
 %setter_sig(type, name)%;
@@ -49,18 +64,5 @@ setter_impl(type, name) ::= <<
 }
 >>
 
-clazz(name,isBean, params) ::= <<
-public final class AutoProperty_%name% extends %name% %if(isBean)%implements AutoProperty_Bean_%name% %endif%{
-	AutoProperty_%name%(%params; wrap, anchor, separator=",":property_parameter()% ) {
-		%params:property_definition()%
-	}
-}>>
 
-property_accessor(name, type) ::= <<
-@Override
-public %type% %name%(){
-	return %name%;
-}
 
-<!- TODO how to handle property naming convention -!>
-<!- TODO if destructuring will not work ,figure out alternative -!>

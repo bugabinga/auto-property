@@ -14,29 +14,72 @@
  */
 package net.bugabinga.annotation.bean.template;
 
-import java.util.Arrays;
-
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * @author Oliver Jan Krylow (okrylow@gmail.com)
- *
  */
 public class STDebugGUI {
 
-  /**
-   * @param args arguments
-   */
-  public static void main(final String[] args) {
-    final STGroup group =
-        new STGroupFile("net/bugabinga/annotation/bean/template/autoProperty.stg");
-    final ST st = group.getInstanceOf("instance");
-    st.add("packageName", "com.test.debug");
-    st.add("imports", Arrays.asList("a.b.c.C", "g.b.f.R", "r.t.y.U"));
-    st.add("className", "TestModel");
-    st.add("isBean", true);
-    st.inspect();
-  }
+    /**
+     * @param args arguments
+     */
+    public static void main(final String[] args) {
+        final STGroup group =
+                new STGroupFile("net/bugabinga/annotation/bean/template/autoProperty.stg");
+        final ST st = group.getInstanceOf("auto_property_instance");
+
+        List<Prop> paramsMap = Arrays.asList(
+                new Prop("StringProperty", "descriptionProperty"),
+                new Prop("StringProperty", "nameProperty"),
+                new Prop("IntegerProperty", "countProperty"),
+                new Prop("DoubleProperty", "stateProperty"));
+
+
+/*
+                TODO Syntax highlighter for ST + little tooling
+        TODO Tutorial for ST mapping funtions with seperators
+        TODO Tutorial for ST desctructuring
+        TODO Tutorial for custom functions
+*/
+
+        st.add("packageName", "com.test.debug")
+                .add("imports", Arrays.asList("a.b.c.C", "g.b.f.R", "r.t.y.U"))
+                .add("className", "TestModel")
+                .add("isBean", true)
+                .add("params", paramsMap);
+
+        st.inspect(80);
+    }
+
+    private static class Prop {
+        private String type;
+        private String name;
+
+        public Prop(String type, String name) {
+            this.type = type;
+            this.name = name;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
 }

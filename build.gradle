@@ -4,52 +4,54 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
-
-//TODO(bugabinga): configure equivalent for IDEA
-eclipse {
-  classpath {
-  	downloadJavadoc = true
-  	downloadSources = true
-
-	//exclude the case test package to prevent cluttering the IDE with false Error messages
-    file {
-      withXml {
-      def resourceEntry = it.asNode().find { it.attributes().kind=='src' && it.attributes().path=='src/test/resources' }
-      resourceEntry.attributes().excluding = 'net/bugabinga/annotation/bean/model/'
-        //<classpathentry excluding="net/bugabinga/annotation/bean/model/" kind="src" path="src/test/resources"/>
-        //foreach( entry in it.asNode()) {
-        //	if(entry.attribute('kind')=='src' && entry.attribute('path')=='src/test/resources') {
-        //		entry.attributes().excluding = 'net/bugabinga/annotation/bean/model/'
-        //	}
-        //}
-      }
-     }
-    }
-   }
+configurations {
+    // libraries we do not want to ship with the artifact
+    provided
+}
 
 dependencies {
-	compile 'org.antlr:ST4:4.0.8'
-	testCompile 'junit:junit:4.11'
-	testCompile 'org.mockito:mockito-all:1.9.5'
-	testCompile 'com.google.code.findbugs:jsr305:3.0.0'
+    compile 'org.antlr:ST4:4.0.8'
+
+    testCompile 'junit:junit:4.11'
+    testCompile 'org.mockito:mockito-all:1.9.5'
+    testCompile 'com.google.code.findbugs:jsr305:3.0.0'
+
+    provided 'com.google.auto.value:auto-value:1.0-rc1'
 }
 
-task sourcesJar(type: Jar, dependsOn:classes) {
-	classifier = 'sources'
-	from sourceSets.main.allSource
+//Include provided for compilation
+sourceSets.main.compileClasspath += configurations.provided
+
+// optional: if using 'idea' plugin
+idea {
+    module {
+        scopes.PROVIDED.plus += configurations.provided
+    }
 }
 
-task javadocJar(type: Jar, dependsOn:javadoc) {
-	classifier = 'javadoc'
-	from javadoc.destinationDir
+// optional: if using 'eclipse' plugin
+eclipse {
+    classpath {
+        plusConfigurations += configurations.provided
+    }
 }
 
-task stDebug(type:JavaExec) {
-   main = "net.bugabinga.annotation.bean.template.STDebugGUI"
-   classpath = sourceSets.main.runtimeClasspath
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+task stDebug(type: JavaExec) {
+    main = "net.bugabinga.annotation.bean.template.STDebugGUI"
+    classpath = sourceSets.main.runtimeClasspath
 }
 
 task wrapper(type: Wrapper) {
@@ -57,6 +59,6 @@ task wrapper(type: Wrapper) {
 }
 
 artifacts {
-	archives sourcesJar
-	archives javadocJar
+    archives sourcesJar
+    archives javadocJar
 }
