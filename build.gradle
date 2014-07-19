@@ -7,6 +7,7 @@ repositories {
     mavenCentral()
 }
 
+<<<<<<< Updated upstream
 configurations {
     // libraries we do not want to ship with the artifact
     provided
@@ -32,6 +33,33 @@ idea {
     }
 }
 
+=======
+configurations{
+    // libraries we do not want to ship with the artifact
+    provided
+}
+
+dependencies {
+	compile 'org.antlr:ST4:4.0.8'
+
+    testCompile 'junit:junit:4.11'
+	testCompile 'org.mockito:mockito-all:1.9.5'
+	testCompile 'com.google.code.findbugs:jsr305:3.0.0'
+
+    provided 'com.google.auto.value:auto-value:1.0-rc1'
+}
+
+//Include provided for compilation
+sourceSets.main.compileClasspath += configurations.provided
+
+// optional: if using 'idea' plugin
+idea {
+    module{
+        scopes.PROVIDED.plus += configurations.provided
+    }
+}
+
+>>>>>>> Stashed changes
 // optional: if using 'eclipse' plugin
 eclipse {
     classpath {

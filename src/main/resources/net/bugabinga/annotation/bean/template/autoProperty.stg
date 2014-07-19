@@ -18,6 +18,7 @@ public final class AutoProperty_%name% extends %name% {
 	}
 }>>
 
+<<<<<<< Updated upstream
 property_parameter(property) ::= "final %property.type% %property.name%"
 
 property_definition(property) ::= "this.%property.name% = new %property.type%(this,\"%property.name%\",%property.name%)"
@@ -26,6 +27,16 @@ property_accessor(property) ::= <<
 @Override
 public %property.type% %property.name%(){
 	return %property.name%;
+=======
+property_parameter(type, name) ::= "final %type% %name%"
+
+property_definition(type, name) ::= "this.%name% = new %type%(this,\"%name%\",%name%)"
+
+property_accessor(type, name) ::= <<
+@Override
+public %type% %name%(){
+	return %name%;
+>>>>>>> Stashed changes
 }>>
 
 getter_sig(type, name) ::= "public %type% get%name%()"

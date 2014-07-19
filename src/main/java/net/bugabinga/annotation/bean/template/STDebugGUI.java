@@ -19,7 +19,12 @@ import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
 
 import java.util.Arrays;
+<<<<<<< Updated upstream
 import java.util.List;
+=======
+import java.util.HashMap;
+import java.util.Map;
+>>>>>>> Stashed changes
 
 /**
  * @author Oliver Jan Krylow (okrylow@gmail.com)
@@ -34,11 +39,19 @@ public class STDebugGUI {
                 new STGroupFile("net/bugabinga/annotation/bean/template/autoProperty.stg");
         final ST st = group.getInstanceOf("auto_property_instance");
 
+<<<<<<< Updated upstream
         List<Prop> paramsMap = Arrays.asList(
                 new Prop("StringProperty", "descriptionProperty"),
                 new Prop("StringProperty", "nameProperty"),
                 new Prop("IntegerProperty", "countProperty"),
                 new Prop("DoubleProperty", "stateProperty"));
+=======
+        Map<String, String> paramsMap = new HashMap<>();
+        paramsMap.put("StringProperty", "descriptionProperty");
+        paramsMap.put("StringProperty", "nameProperty");
+        paramsMap.put("IntegerProperty", "countProperty");
+        paramsMap.put("DoubleProperty", "stateProperty");
+>>>>>>> Stashed changes
 
 
 /*
@@ -54,6 +67,7 @@ public class STDebugGUI {
                 .add("isBean", true)
                 .add("params", paramsMap);
 
+<<<<<<< Updated upstream
         st.inspect(80);
     }
 
@@ -81,5 +95,8 @@ public class STDebugGUI {
         public void setName(String name) {
             this.name = name;
         }
+=======
+        st.inspect();
+>>>>>>> Stashed changes
     }
 }
