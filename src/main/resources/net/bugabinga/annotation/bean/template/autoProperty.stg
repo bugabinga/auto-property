@@ -5,38 +5,38 @@ auto_property_instance(packageName, imports, className, isBean, params) ::= <<
 
 %imports:import_statement(); separator="\n"%
 
-%clazz(className, isBean, params)%>>
+
+%clazz_constructor(className, isBean, params)%
+
+
+>>
 
 import_statement(name, isStatic=false) ::= "import %if(isStatic)%static%endif% %name%;"
 
 package_statement(name) ::= "package %name%;"
 
-clazz(name,isBean, params) ::= <<
+clazz_constructor(name,isBean, params) ::= <<
 public final class AutoProperty_%name% extends %name% {
-	AutoProperty_%name%(%params:property_parameter(); wrap, anchor, separator=","% ) {
-		%params:property_definition(); separator="\n"%
-	}
+
+    %params:property_declaration(); anchor, separator="\n"%
+
+    AutoProperty_%name%(%params:property_parameter(); wrap, anchor, separator=","% ) {
+        %params:property_definition(); anchor, separator="\n"%
+    }
+
+    %params:property_accessor();anchor, separator="\n"%
 }>>
 
-<<<<<<< Updated upstream
+property_declaration(property) ::= "private %property_parameter(property)%;"
+
 property_parameter(property) ::= "final %property.type% %property.name%"
 
-property_definition(property) ::= "this.%property.name% = new %property.type%(this,\"%property.name%\",%property.name%)"
+property_definition(property) ::= "this.%property.name% = new %property.impl%(this,\"%property.name%\",%property.name%)"
 
 property_accessor(property) ::= <<
 @Override
 public %property.type% %property.name%(){
 	return %property.name%;
-=======
-property_parameter(type, name) ::= "final %type% %name%"
-
-property_definition(type, name) ::= "this.%name% = new %type%(this,\"%name%\",%name%)"
-
-property_accessor(type, name) ::= <<
-@Override
-public %type% %name%(){
-	return %name%;
->>>>>>> Stashed changes
 }>>
 
 getter_sig(type, name) ::= "public %type% get%name%()"

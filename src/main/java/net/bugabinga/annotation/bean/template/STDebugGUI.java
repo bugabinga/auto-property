@@ -19,84 +19,78 @@ import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
 
 import java.util.Arrays;
-<<<<<<< Updated upstream
 import java.util.List;
-=======
-import java.util.HashMap;
-import java.util.Map;
->>>>>>> Stashed changes
 
 /**
  * @author Oliver Jan Krylow (okrylow@gmail.com)
  */
 public class STDebugGUI {
 
-    /**
-     * @param args arguments
-     */
-    public static void main(final String[] args) {
-        final STGroup group =
-                new STGroupFile("net/bugabinga/annotation/bean/template/autoProperty.stg");
-        final ST st = group.getInstanceOf("auto_property_instance");
+  /**
+   * @param args arguments
+   */
+  public static void main(final String[] args) {
+    final STGroup group =
+        new STGroupFile("net/bugabinga/annotation/bean/template/autoProperty.stg");
+    final ST st = group.getInstanceOf("auto_property_instance");
 
-<<<<<<< Updated upstream
-        List<Prop> paramsMap = Arrays.asList(
-                new Prop("StringProperty", "descriptionProperty"),
-                new Prop("StringProperty", "nameProperty"),
-                new Prop("IntegerProperty", "countProperty"),
-                new Prop("DoubleProperty", "stateProperty"));
-=======
-        Map<String, String> paramsMap = new HashMap<>();
-        paramsMap.put("StringProperty", "descriptionProperty");
-        paramsMap.put("StringProperty", "nameProperty");
-        paramsMap.put("IntegerProperty", "countProperty");
-        paramsMap.put("DoubleProperty", "stateProperty");
->>>>>>> Stashed changes
+    List<Prop> paramsMap = Arrays.asList(
+        new Prop("StringProperty", "descriptionProperty", "SimpleStringProperty"),
+        new Prop("StringProperty", "nameProperty", "SimpleStringProperty"),
+        new Prop("IntegerProperty", "countProperty", "SimpleIntegerProperty"),
+        new Prop("DoubleProperty", "stateProperty", "SimpleDoubleProperty"));
 
 
 /*
-                TODO Syntax highlighter for ST + little tooling
+        TODO Syntax highlighter for ST + little tooling
         TODO Tutorial for ST mapping funtions with seperators
         TODO Tutorial for ST desctructuring
         TODO Tutorial for custom functions
 */
 
-        st.add("packageName", "com.test.debug")
-                .add("imports", Arrays.asList("a.b.c.C", "g.b.f.R", "r.t.y.U"))
-                .add("className", "TestModel")
-                .add("isBean", true)
-                .add("params", paramsMap);
+    st.add("packageName", "com.test.debug")
+        .add("imports", Arrays.asList("a.b.c.C", "g.b.f.R", "r.t.y.U"))
+        .add("className", "TestModel")
+        .add("isBean", true)
+        .add("params", paramsMap);
 
-<<<<<<< Updated upstream
-        st.inspect(80);
+    st.inspect(80);
+  }
+
+  private static class Prop {
+
+    private String type;
+    private String name;
+    private String impl;
+
+    public Prop(String type, String name, String impl) {
+      this.type = type;
+      this.name = name;
+      this.impl = impl;
     }
 
-    private static class Prop {
-        private String type;
-        private String name;
-
-        public Prop(String type, String name) {
-            this.type = type;
-            this.name = name;
-        }
-
-        public String getType() {
-            return type;
-        }
-
-        public void setType(String type) {
-            this.type = type;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-=======
-        st.inspect();
->>>>>>> Stashed changes
+    public String getType() {
+      return type;
     }
+
+    public void setType(String type) {
+      this.type = type;
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public void setName(String name) {
+      this.name = name;
+    }
+
+    public String getImpl() {
+      return impl;
+    }
+
+    public void setImpl(String impl) {
+      this.impl = impl;
+    }
+  }
 }
