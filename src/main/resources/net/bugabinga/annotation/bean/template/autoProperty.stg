@@ -6,8 +6,7 @@ auto_property_instance(packageName, imports, className, isBean, params) ::= <<
 %imports:import_statement(); separator="\n"%
 
 
-%clazz_constructor(className, isBean, params)%
-
+%clazz(className, isBean, params)%
 
 >>
 
@@ -15,7 +14,7 @@ import_statement(name, isStatic=false) ::= "import %if(isStatic)%static%endif% %
 
 package_statement(name) ::= "package %name%;"
 
-clazz_constructor(name,isBean, params) ::= <<
+clazz(name,isBean, params) ::= <<
 public final class AutoProperty_%name% extends %name% {
 
     %params:property_declaration(); anchor, separator="\n"%
@@ -25,6 +24,9 @@ public final class AutoProperty_%name% extends %name% {
     }
 
     %params:property_accessor();anchor, separator="\n"%
+
+    %if(isBean)%%params:getter_impl();anchor, separator="\n"%%endif%
+    %if(isBean)%%params:setter_impl();anchor, separator="\n"%%endif%
 }>>
 
 property_declaration(property) ::= "private %property_parameter(property)%;"
@@ -39,39 +41,39 @@ public %property.type% %property.name%(){
 	return %property.name%;
 }>>
 
-getter_sig(type, name) ::= "public %type% get%name%()"
+getter_sig(property) ::= "public %property.simpleType% get%property.simpleName%"
 
-getter_interface(type, name, commentText, commentReturn) ::= <<
+getter_interface(property) ::= <<
 
 /**
-* %commentText%
-* @return %commentReturn%
+* %property.commentText%
+* @return %property.commentReturn%
 */
-%getter_sig(type,name)%;
+%getter_sig(property)%();
 >>
 
-getter_impl(type, name) ::= <<
+getter_impl(property) ::= <<
 @Override
-%getter_sig(type, name)% {
-	return %name%.getValue();
+%getter_sig(property)%() {
+	return %property.name%.getValue();
 }
 >>
 
-setter_sig(type, name) ::= "public %type% set%name%()"
+setter_sig(property) ::= "public %property.simpleType% set%property.simpleName%"
 
-setter_interface(type, name, commentText, commentParam) ::= <<
+setter_interface(property) ::= <<
 /**
-* %commentText%
-* @param %name% %commentParam%
+* %property.commentText%
+* @param %property.simpleName% %property.commentParam%
 */
-%setter_sig(type, name)%;
+%setter_sig(property)%;
 >>
 
-setter_impl(type, name) ::= <<
+setter_impl(property) ::= <<
 @Override
-%setter_sig(type, name)%(final %type% %name%) {
-	Objects.requireNonNull($);
-	this.%name%.setValue(%name%)
+%setter_sig(property)%(final %property.simpleType% %property.simpleName%) {
+	Objects.requireNonNull(%property.simpleName%);
+	this.%property.name%.setValue(%property.simpleName%)
 }
 >>
 

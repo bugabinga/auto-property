@@ -34,11 +34,16 @@ public class STDebugGUI {
         new STGroupFile("net/bugabinga/annotation/bean/template/autoProperty.stg");
     final ST st = group.getInstanceOf("auto_property_instance");
 
-    List<Prop> paramsMap = Arrays.asList(
-        new Prop("StringProperty", "descriptionProperty", "SimpleStringProperty"),
-        new Prop("StringProperty", "nameProperty", "SimpleStringProperty"),
-        new Prop("IntegerProperty", "countProperty", "SimpleIntegerProperty"),
-        new Prop("DoubleProperty", "stateProperty", "SimpleDoubleProperty"));
+    List<Prop> params = Arrays.asList(
+        new Prop("StringProperty", "descriptionProperty", "SimpleStringProperty", "description",
+                 "String", "A description of this bean.", "A new description.",
+                 "The description of this bean."),
+        new Prop("StringProperty", "nameProperty", "SimpleStringProperty", "name", "String", "",
+                 "", ""),
+        new Prop("IntegerProperty", "countProperty", "SimpleIntegerProperty", "count",
+                 "Integer", "", "", ""),
+        new Prop("DoubleProperty", "stateProperty", "SimpleDoubleProperty", "state", "Double", "",
+                 "", ""));
 
 
 /*
@@ -48,49 +53,40 @@ public class STDebugGUI {
         TODO Tutorial for custom functions
 */
 
+
+
     st.add("packageName", "com.test.debug")
-        .add("imports", Arrays.asList("a.b.c.C", "g.b.f.R", "r.t.y.U"))
+        .add("imports", Arrays.asList("a.b.c.C", "g.b.f.R", "r.t.y.U"))//FIXME imports need to be own value type
         .add("className", "TestModel")
         .add("isBean", true)
-        .add("params", paramsMap);
+        .add("params", params);
 
     st.inspect(80);
   }
 
+  /*TODO(bugabinga): Auto-Value to generate this:*/
   private static class Prop {
 
-    private String type;
-    private String name;
-    private String impl;
+    public final String type;
+    public final String name;
+    public final String impl;
+    public final String simpleName;
+    public final String simpleType;
+    public final String commentText;
+    public final String commentParam;
+    public final String commentReturn;
 
-    public Prop(String type, String name, String impl) {
+    public Prop(String type, String name, String impl, String simpleName, String simpleType,
+                String commentText,
+                String commentParam, String commentReturn) {
       this.type = type;
       this.name = name;
       this.impl = impl;
-    }
-
-    public String getType() {
-      return type;
-    }
-
-    public void setType(String type) {
-      this.type = type;
-    }
-
-    public String getName() {
-      return name;
-    }
-
-    public void setName(String name) {
-      this.name = name;
-    }
-
-    public String getImpl() {
-      return impl;
-    }
-
-    public void setImpl(String impl) {
-      this.impl = impl;
+      this.simpleName = simpleName;
+      this.simpleType = simpleType;
+      this.commentText = commentText;
+      this.commentParam = commentParam;
+      this.commentReturn = commentReturn;
     }
   }
 }
