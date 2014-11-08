@@ -1,5 +1,9 @@
 package net.bugabinga.annotation.bean.template;
 
+import java.net.URI;
+
+import javax.tools.SimpleJavaFileObject;
+
 /**
         * A file object used to represent source coming from a string.
         */
@@ -15,7 +19,7 @@ package net.bugabinga.annotation.bean.template;
             * @param code the source code for the compilation unit represented by this file object
             */
            JavaSourceFromString(String name, String code) {
-               super(URI.create("string:///" + name.replace('.','/') + Kind.SOURCE.extension),
+               super(URI.create("string:///" + name.replace('.', '/') + Kind.SOURCE.extension),
                      Kind.SOURCE);
                this.code = code;
            }

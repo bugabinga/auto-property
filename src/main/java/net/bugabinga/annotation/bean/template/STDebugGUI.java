@@ -17,6 +17,7 @@ package net.bugabinga.annotation.bean.template;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
+import org.stringtemplate.v4.StringRenderer;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,31 +33,36 @@ public class STDebugGUI {
   public static void main(final String[] args) {
     final STGroup group =
         new STGroupFile("net/bugabinga/annotation/bean/template/autoProperty.stg");
+// TODO(bugabinga): we could write a modeladaptor for javafx properties, not clear if necessary though
+//    group.registerModelAdaptor();
+
+    group.registerRenderer(String.class, new StringRenderer());
     final ST st = group.getInstanceOf("auto_property_instance");
 
-    List<Prop> params = Arrays.asList(
-        new Prop("StringProperty", "descriptionProperty", "SimpleStringProperty", "description",
+    List<Property> params = Arrays.asList(
+        new Property("StringProperty", "descriptionProperty", "SimpleStringProperty", "description",
                  "String", "A description of this bean.", "A new description.",
                  "The description of this bean."),
-        new Prop("StringProperty", "nameProperty", "SimpleStringProperty", "name", "String", "",
+        new Property("StringProperty", "nameProperty", "SimpleStringProperty", "name", "String", "",
                  "", ""),
-        new Prop("IntegerProperty", "countProperty", "SimpleIntegerProperty", "count",
+        new Property("IntegerProperty", "countProperty", "SimpleIntegerProperty", "count",
                  "Integer", "", "", ""),
-        new Prop("DoubleProperty", "stateProperty", "SimpleDoubleProperty", "state", "Double", "",
+        new Property("DoubleProperty", "stateProperty", "SimpleDoubleProperty", "state", "Double", "",
                  "", ""));
-
 
 /*
         TODO Syntax highlighter for ST + little tooling
         TODO Tutorial for ST mapping funtions with seperators
         TODO Tutorial for ST desctructuring
-        TODO Tutorial for custom functions
+        TODO Tutorial ModelAdaptors
+        TODO Tutorial Renderers + Bonus: Abusing Renderer
+        TODO simpleName could be replaced by renderer , should it?
+        TODO equals ,toString and hashCode
 */
 
-
-
     st.add("packageName", "com.test.debug")
-        .add("imports", Arrays.asList("a.b.c.C", "g.b.f.R", "r.t.y.U"))//FIXME imports need to be own value type
+        .add("imports", Arrays
+            .asList("a.b.c.C", "g.b.f.R", "r.t.y.U"))
         .add("className", "TestModel")
         .add("isBean", true)
         .add("params", params);
@@ -64,29 +70,4 @@ public class STDebugGUI {
     st.inspect(80);
   }
 
-  /*TODO(bugabinga): Auto-Value to generate this:*/
-  private static class Prop {
-
-    public final String type;
-    public final String name;
-    public final String impl;
-    public final String simpleName;
-    public final String simpleType;
-    public final String commentText;
-    public final String commentParam;
-    public final String commentReturn;
-
-    public Prop(String type, String name, String impl, String simpleName, String simpleType,
-                String commentText,
-                String commentParam, String commentReturn) {
-      this.type = type;
-      this.name = name;
-      this.impl = impl;
-      this.simpleName = simpleName;
-      this.simpleType = simpleType;
-      this.commentText = commentText;
-      this.commentParam = commentParam;
-      this.commentReturn = commentReturn;
-    }
-  }
 }

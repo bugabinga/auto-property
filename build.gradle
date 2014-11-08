@@ -25,20 +25,6 @@ dependencies {
 //Include provided for compilation
 sourceSets.main.compileClasspath += configurations.provided
 
-// optional: if using 'idea' plugin
-idea {
-    module {
-        scopes.PROVIDED.plus += configurations.provided
-    }
-}
-
-// optional: if using 'eclipse' plugin
-eclipse {
-    classpath {
-        plusConfigurations += configurations.provided
-    }
-}
-
 task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'
     from sourceSets.main.allSource
@@ -52,10 +38,6 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 task stDebug(type: JavaExec) {
     main = "net.bugabinga.annotation.bean.template.STDebugGUI"
     classpath = sourceSets.main.runtimeClasspath
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.0'
 }
 
 artifacts {

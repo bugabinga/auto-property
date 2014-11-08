@@ -1,7 +1,5 @@
 package net.bugabinga.annotation.bean.template.model;
 
-import net.bugabinga.annotation.bean.template.TestModel;
-
 import java.util.Objects;
 
 import javafx.beans.property.DoubleProperty;

@@ -51,11 +51,8 @@ public class Processor extends AbstractProcessor {
 
     // 1. get annotated classes and mine for the necessary data
     elements.stream().peek(this::warnIfInterface)
-        .filter(e -> e.getKind().equals(ElementKind.CLASS)).peek(this::warnIfNotAbstract)
-        .filter(e -> e.getModifiers().contains(Modifier.ABSTRACT)).forEach(element -> {
-
-
-        });
+        .filter(element -> element.getKind().equals(ElementKind.CLASS)).peek(this::warnIfNotAbstract)
+        .filter(element -> element.getModifiers().contains(Modifier.ABSTRACT)).map(element -> element.getEnclosedElements());
 
 
 

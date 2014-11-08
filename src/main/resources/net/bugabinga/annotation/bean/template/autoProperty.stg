@@ -10,38 +10,37 @@ auto_property_instance(packageName, imports, className, isBean, params) ::= <<
 
 >>
 
-import_statement(name, isStatic=false) ::= "import %if(isStatic)%static%endif% %name%;"
+import_statement(name, isStatic=false) ::= <<import %if(isStatic)%static%endif% %name%;>>
 
-package_statement(name) ::= "package %name%;"
+package_statement(name) ::= <<package %name%;>>
 
 clazz(name,isBean, params) ::= <<
 public final class AutoProperty_%name% extends %name% {
 
     %params:property_declaration(); anchor, separator="\n"%
 
-    AutoProperty_%name%(%params:property_parameter(); wrap, anchor, separator=","% ) {
+    AutoProperty_%name%(%params:property_parameter(); wrap, anchor, separator=", "% ) {
         %params:property_definition(); anchor, separator="\n"%
     }
 
     %params:property_accessor();anchor, separator="\n"%
-
     %if(isBean)%%params:getter_impl();anchor, separator="\n"%%endif%
     %if(isBean)%%params:setter_impl();anchor, separator="\n"%%endif%
 }>>
 
-property_declaration(property) ::= "private %property_parameter(property)%;"
+property_declaration(property) ::= <<private %property_parameter(property)%;>>
 
-property_parameter(property) ::= "final %property.type% %property.name%"
+property_parameter(property) ::= <<final %property.type% %property.simpleName%>>
 
-property_definition(property) ::= "this.%property.name% = new %property.impl%(this,\"%property.name%\",%property.name%)"
+property_definition(property) ::= <<this.%property.simpleName% = new %property.impl%(this,"%property.simpleName%",%property.simpleName%)>>
 
 property_accessor(property) ::= <<
 @Override
 public %property.type% %property.name%(){
-	return %property.name%;
+	return %property.simpleName%;
 }>>
 
-getter_sig(property) ::= "public %property.simpleType% get%property.simpleName%"
+getter_sig(property) ::= <<public %property.simpleType% get%property.simpleName;format="cap"%>>
 
 getter_interface(property) ::= <<
 
@@ -55,11 +54,11 @@ getter_interface(property) ::= <<
 getter_impl(property) ::= <<
 @Override
 %getter_sig(property)%() {
-	return %property.name%.getValue();
+	return %property.simpleName%.getValue();
 }
 >>
 
-setter_sig(property) ::= "public %property.simpleType% set%property.simpleName%"
+setter_sig(property) ::= <<public %property.simpleType% set%property.simpleName;format="cap"%>>
 
 setter_interface(property) ::= <<
 /**
@@ -73,7 +72,7 @@ setter_impl(property) ::= <<
 @Override
 %setter_sig(property)%(final %property.simpleType% %property.simpleName%) {
 	Objects.requireNonNull(%property.simpleName%);
-	this.%property.name%.setValue(%property.simpleName%)
+	this.%property.simpleName%.setValue(%property.simpleName%)
 }
 >>
 
