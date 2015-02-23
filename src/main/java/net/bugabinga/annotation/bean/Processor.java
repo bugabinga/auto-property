@@ -30,31 +30,35 @@ import javax.tools.Diagnostic.Kind;
 
 /**
  * @author Oliver Jan Krylow (okrylow@gmail.com)
- *
  */
 @SupportedAnnotationTypes(Processor.AUTO_PROPERTY_ANNOTATION_NAME)
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class Processor extends AbstractProcessor {
+
   static final String AUTO_PROPERTY_ANNOTATION_NAME = "net.bugabinga.annotation.bean.AutoProperty";
 
-  private static final String NON_ABSTRACT_CLASS_WARNING =
+  private static final String
+      NON_ABSTRACT_CLASS_WARNING =
       "You have annotated a non-abstract class with @AutoProperty. This will not lead to automatic property generation. Please check {0}.";
 
-  private static final String INTERFACE_WARNING =
+  private static final String
+      INTERFACE_WARNING =
       "You have annotated an interface with @AutoProperty. This will not lead to automatic property generation. Please check {0}.";
 
   @Override
   public boolean process(final Set<? extends TypeElement> annotations,
-      final RoundEnvironment roundEnv) {
+                         final RoundEnvironment roundEnv) {
     final Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(AutoProperty.class);
-    note("PROCCESING  YOU! " + elements);
+    note("PROCESSING  YOU! " + elements);
 
     // 1. get annotated classes and mine for the necessary data
-    elements.stream().peek(this::warnIfInterface)
-        .filter(element -> element.getKind().equals(ElementKind.CLASS)).peek(this::warnIfNotAbstract)
-        .filter(element -> element.getModifiers().contains(Modifier.ABSTRACT)).map(element -> element.getEnclosedElements());
-
-
+    elements.stream()
+        .peek(this::warnIfInterface)
+        .filter(element -> element.getKind().equals(ElementKind.CLASS))
+        .peek(this::warnIfNotAbstract)
+        .filter(element -> element.getModifiers()
+        .contains(Modifier.ABSTRACT))
+        .map(Element::getEnclosedElements);
 
     // 2. generate AutoProperty_XXX instance from templates and data
 
@@ -63,37 +67,37 @@ public class Processor extends AbstractProcessor {
     return false;
   }
 
-  private final Element warnIfInterface(final Element element) {
-    if (!element.getKind().equals(ElementKind.INTERFACE)) {
+  private Element warnIfInterface(final Element element) {
+    if (element.getKind().equals(ElementKind.INTERFACE)) {
       warning(MessageFormat.format(INTERFACE_WARNING, element.getSimpleName()));
     }
     return element;
   }
 
-  private final Element warnIfNotAbstract(final Element element) {
+  private Element warnIfNotAbstract(final Element element) {
     if (!element.getModifiers().contains(Modifier.ABSTRACT)) {
       warning(MessageFormat.format(NON_ABSTRACT_CLASS_WARNING, element.getSimpleName()));
     }
     return element;
   }
 
-  private final void note(final String note) {
+  private void note(final String note) {
     processingEnv.getMessager().printMessage(Kind.NOTE, note);
   }
 
-  private final void warning(final String note) {
+  private void warning(final String note) {
     processingEnv.getMessager().printMessage(Kind.WARNING, note);
   }
 
-  private final void error(final String note) {
+  private void error(final String note) {
     processingEnv.getMessager().printMessage(Kind.ERROR, note);
   }
 
-  private final void mandatory(final String note) {
+  private void mandatory(final String note) {
     processingEnv.getMessager().printMessage(Kind.MANDATORY_WARNING, note);
   }
 
-  private final void other(final String note) {
+  private void other(final String note) {
     processingEnv.getMessager().printMessage(Kind.OTHER, note);
   }
 
