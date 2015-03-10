@@ -57,8 +57,10 @@ public class Processor extends AbstractProcessor {
         .filter(element -> element.getKind().equals(ElementKind.CLASS))
         .peek(this::warnIfNotAbstract)
         .filter(element -> element.getModifiers()
-        .contains(Modifier.ABSTRACT))
-        .map(Element::getEnclosedElements);
+            .contains(Modifier.ABSTRACT))
+        .map(Element::getEnclosedElements)
+        .flatMap(enclosedElements -> enclosedElements.stream())
+        .forEach(System.out::println);
 
     // 2. generate AutoProperty_XXX instance from templates and data
 
